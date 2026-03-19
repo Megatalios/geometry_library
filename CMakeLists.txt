@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 3.20)
-
-project(geometrical_engine)
-
-add_library(geometry src/Point3D.cpp src/Vector3D.cpp)
-
+cmake_minimum_required(VERSION 3.15)
+ 
+project(geometrical_library_project)
+ 
+add_library(geometry src/Point3D.cpp src/Vector3D.cpp src/LineSegment.cpp src/BezierCurve.cpp)
+ 
 target_include_directories(geometry PUBLIC include)
-# 2. Создаем исполняемый файл из main.cpp
-add_executable(app app/main.cpp) # Замени app/main.cpp на свой путь, если он другой
-
-# 3. Линкуем библиотеку к исполняемому файлу
+ 
+add_executable(app app/main.cpp)
+ 
 target_link_libraries(app geometry)
