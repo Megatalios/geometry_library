@@ -1,7 +1,8 @@
 #pragma once
  
 class Point3D;
- 
+
+// Самописный класс вектора
 class Vector3D {
 private:
 	double x, y, z;

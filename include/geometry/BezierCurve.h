@@ -11,5 +11,12 @@ public:
 	// Метод для получения производной кривой при заданном t
 	Vector3D get_derivative(double t) const override;
 
-	Vector3D get_second_derivative(double t) const;
+	// Метод для получения второй производной кривой при заданном t
+	Vector3D get_second_derivative(double t) const override;
+
+	// Проекция точки на кривую
+	double point_projective(Point3D point) const override;
+
+	// Перекрытие деструктора
+	~BezierCurve() override = default;
 };
