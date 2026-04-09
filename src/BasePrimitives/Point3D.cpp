@@ -1,5 +1,5 @@
-#include "geometry/Point3D.h"
-#include "geometry/Vector3D.h"
+#include "geometry/BasePrimitives/Point3D.h"
+#include "geometry/BasePrimitives/Vector3D.h"
 
 // Конструктор по умолчанию
 Point3D::Point3D() : x(0), y(0), z(0) {}
@@ -36,3 +36,7 @@ std::ostream& operator << (std::ostream& os, const Point3D& point)
 {
 	return os << point.x << " " << point.y << " " << point.z;
 }
+
+double Point3D::getX() const { return x; }
+double Point3D::getY() const { return y; }
+double Point3D::getZ() const { return z; }

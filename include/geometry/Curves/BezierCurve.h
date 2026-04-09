@@ -1,22 +1,27 @@
 #pragma once
+#include "geometry/Curves/ICurve.h"
 #include <vector>
-#include "geometry/ICurve.h"
- 
+
 class BezierCurve : public ICurve {
 	std::vector <Point3D> control_points;
 public:
+	// Конструкторы 
+	// По умолчанию
+	BezierCurve();
+	// С параметром
+	BezierCurve(std::vector <Point3D> control_points_);
+	// Копрование
+	BezierCurve(const BezierCurve& other_curve);
+
 	// Метод для получения точки кривой при заданном t
 	Point3D get_point(double t) const override;
- 
+
 	// Метод для получения производной кривой при заданном t
 	Vector3D get_derivative(double t) const override;
 
 	// Метод для получения второй производной кривой при заданном t
 	Vector3D get_second_derivative(double t) const override;
 
-	// Проекция точки на кривую
-	double point_projective(Point3D point) const override;
-
 	// Перекрытие деструктора
-	~BezierCurve() override = default;
+	~BezierCurve() = default;
 };
