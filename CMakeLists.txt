@@ -11,8 +11,9 @@ add_library(geometry
 	src/Curves/BezierCurve.cpp 
 	src/Curves/BSpline.cpp 
 	src/Curves/ICurve.cpp 
-	# Поверхности - пока только поверхность Безье
+	# Поверхности Безье и сплайновая
 	src/Surfaces/BezierSurface.cpp
+	src/Surfaces/BSplineSurface.cpp
 )
 
 target_include_directories(geometry PUBLIC include)
