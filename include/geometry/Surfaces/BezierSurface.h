@@ -15,7 +15,7 @@ public:
 	Point3D get_point(double u, double v) const override;
 
 	// Получить вектор нормали к точке с параметрами u, v
-	Vector3D get_norm(double u, double v) const override;
+	Vector3D get_normal(double u, double v) const override;
 
 	// Виртуальный деструктор - нужен для корректного удаления объекта, который данный интерфейс поддерживает
 	~BezierSurface() = default;
