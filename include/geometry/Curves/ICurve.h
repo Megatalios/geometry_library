@@ -1,6 +1,7 @@
 #pragma once
 #include "geometry/BasePrimitives/Point3D.h"
 #include "geometry/BasePrimitives/Vector3D.h"
+#include "geometry/BoundingBox/BoundingBox.h"
 
 class ICurve {
 public:
@@ -18,4 +19,7 @@ public:
 
 	// Метод для получения проекции точки на кривую (не абстрактный, поскольку реализован универсальный численный метод Ньютона)
 	virtual double point_projective(Point3D point) const;
+
+	// Метод для получения параллелепипеда кривой
+	virtual BoundingBox get_bounding_box() const = 0;
 };

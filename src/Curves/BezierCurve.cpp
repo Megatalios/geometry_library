@@ -54,3 +54,7 @@ Vector3D BezierCurve::get_second_derivative(double t) const {
 	}
 	return scale_coef * ((temp_points[2] - temp_points[1]) - (temp_points[1] - temp_points[0]));
 }
+
+BoundingBox BezierCurve::get_bounding_box() const {
+	// Надо что-то сделать
+}

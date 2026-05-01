@@ -22,6 +22,9 @@ public:
 	// Метод для получения второй производной кривой при заданном t
 	Vector3D get_second_derivative(double t) const override;
 
+	// Метод для получения параллелепипеда кривой
+	BoundingBox get_bounding_box() const override;
+
 	// Перекрытие деструктора
 	~BezierCurve() = default;
 };

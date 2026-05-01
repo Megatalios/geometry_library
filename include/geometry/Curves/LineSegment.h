@@ -26,6 +26,9 @@ public:
 	// Метод для получения проекции точки на отрезок прямой
 	double point_projective(Point3D point) const override;
 
+	// Метод для получения параллелепипеда кривой
+	BoundingBox get_bounding_box() const override;
+
 	// Перекрытие деструктора
 	~LineSegment() override = default;
 };

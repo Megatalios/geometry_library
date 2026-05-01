@@ -159,3 +159,8 @@ std::vector<Point3D> BSpline::compute_derivative_points(const std::vector<Point3
 	}
 	return q_points;
 }
+
+
+BoundingBox BSpline::get_bounding_box() const {
+	// Надо что-то сделать
+}

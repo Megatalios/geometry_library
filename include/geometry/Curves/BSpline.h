@@ -27,6 +27,9 @@ public:
 
 	Vector3D get_second_derivative(double t) const override;
 
+	// Метод для получения параллелепипеда кривой
+	BoundingBox get_bounding_box() const override;
+
 	// Перекрытие деструктора для того, чтобы корреткно удалялись объекты, реализиующие данный интерфейс
 	~BSpline() = default;
 

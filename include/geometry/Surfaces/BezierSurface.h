@@ -17,6 +17,9 @@ public:
 	// Получить вектор нормали к точке с параметрами u, v
 	Vector3D get_normal(double u, double v) const override;
 
+	// Метод для получения параллелепипеда поверхности
+	BoundingBox get_bounding_box() const override;
+
 	// Виртуальный деструктор - нужен для корректного удаления объекта, который данный интерфейс поддерживает
 	~BezierSurface() = default;
 };
