@@ -2,11 +2,16 @@
 
 // Конструкторы 
 // По умолчанию
-BezierCurve::BezierCurve() {}
+BezierCurve::BezierCurve() {
+	Point3D p1, p2;
+	bbox = BoundingBox(p1, p2);
+}
 // С параметром
-BezierCurve::BezierCurve(std::vector <Point3D> control_points_) : control_points(control_points_) {}
+BezierCurve::BezierCurve(std::vector <Point3D> control_points_) : control_points(control_points_) {
+	compute_bounding_box();
+}
 // Копрование
-BezierCurve::BezierCurve(const BezierCurve& other_curve) : control_points(other_curve.control_points) {}
+BezierCurve::BezierCurve(const BezierCurve& other_curve) : control_points(other_curve.control_points), bbox(other_curve.bbox) {}
 
 // Метод для получения точки кривой при заданном t
 Point3D BezierCurve::get_point(double t) const {
@@ -56,5 +61,23 @@ Vector3D BezierCurve::get_second_derivative(double t) const {
 }
 
 BoundingBox BezierCurve::get_bounding_box() const {
-	// Надо что-то сделать
+	return bbox;
+}
+
+void BezierCurve::compute_bounding_box() {
+	if (control_points.empty()) {
+		bbox = BoundingBox(Point3D(0, 0, 0), Point3D(0, 0, 0));
+		return;
+	}
+	Point3D minP = control_points[0];
+	Point3D maxP = control_points[0];
+	for (const auto& point : control_points) {
+		if (point.getX() < minP.getX()) minP.setCoordinates(point.getX(), minP.getY(), minP.getZ());
+		if (point.getY() < minP.getY()) minP.setCoordinates(minP.getX(), point.getY(), minP.getZ());
+		if (point.getZ() < minP.getZ()) minP.setCoordinates(minP.getX(), minP.getY(), point.getZ());
+		if (point.getX() > maxP.getX()) maxP.setCoordinates(point.getX(), maxP.getY(), maxP.getZ());
+		if (point.getY() > maxP.getY()) maxP.setCoordinates(maxP.getX(), point.getY(), maxP.getZ());
+		if (point.getZ() > maxP.getZ()) maxP.setCoordinates(maxP.getX(), maxP.getY(), point.getZ());
+	}
+	bbox = BoundingBox(minP, maxP);
 }

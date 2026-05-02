@@ -3,7 +3,12 @@
 #include <vector>
 
 class BezierCurve : public ICurve {
+private:
 	std::vector <Point3D> control_points;
+	BoundingBox bbox;
+
+	// Вспомогательный метод для вычисления габаритов
+	void compute_bounding_box();
 public:
 	// Конструкторы 
 	// По умолчанию

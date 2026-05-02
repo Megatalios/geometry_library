@@ -53,5 +53,9 @@ double LineSegment::point_projective(Point3D point) const {
 }
 
 BoundingBox LineSegment::get_bounding_box() const {
-	// Надо что-то сделать
+	return bbox;
+}
+
+void LineSegment::compute_bounding_box() {
+	bbox = BoundingBox(p1, p2);
 }

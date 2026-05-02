@@ -84,5 +84,5 @@ Vector3D BezierSurface::get_normal(double u, double v) const {
 
 // Метод для получения параллелепипеда поверхности
 BoundingBox BezierSurface::get_bounding_box() const {
-
+	return bbox;
 }

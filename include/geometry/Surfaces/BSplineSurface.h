@@ -1,6 +1,6 @@
 #pragma once
 #include "geometry/Surfaces/ISurface.h"
-#include "geometry/Curves/BSpline.h"
+#include "geometry/Curves/BSplineCurve.h"
 #include <vector>
 
 class BSplineSurface : public ISurface {
@@ -14,6 +14,11 @@ class BSplineSurface : public ISurface {
 	// Узлоые точки для u и v
 	std::vector<double> knots_u;
 	std::vector<double> knots_v;
+	// Для параллелепипеда поверхности
+	BoundingBox bbox;
+
+	// Вспомогательный метод для вычисления габаритов
+	void compute_bounding_box();
 public:
 	// Конструкторы
 	BSplineSurface();

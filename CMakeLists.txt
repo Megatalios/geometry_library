@@ -10,7 +10,7 @@ add_library(geometry
 	# Кривые - отрезок прямой, кривая Безье и B-сплайн
 	src/Curves/LineSegment.cpp 
 	src/Curves/BezierCurve.cpp 
-	src/Curves/BSpline.cpp 
+	src/Curves/BSplineCurve.cpp 
 	src/Curves/ICurve.cpp 
 
 	# Поверхности Безье и сплайновая

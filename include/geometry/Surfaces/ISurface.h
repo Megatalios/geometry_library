@@ -1,4 +1,5 @@
 #include "geometry/BasePrimitives/Point3D.h"
+#include "geometry/BoundingBox/BoundingBox.h"
 
 // Интерфейс поверхности. Пока что все, что нужно нам - это нормаль и сама точка по параметрам
 class ISurface {

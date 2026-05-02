@@ -6,6 +6,11 @@
 class BezierSurface : public ISurface {
 	// Матрица точек (сетка)
 	std::vector<std::vector<Point3D>> control_net;
+	// Для параллелепипеда поверхности
+	BoundingBox bbox;
+
+	// Вспомогательный метод для вычисления габаритов
+	void compute_bounding_box();
 public:
 	// Конструкторы
 	BezierSurface();

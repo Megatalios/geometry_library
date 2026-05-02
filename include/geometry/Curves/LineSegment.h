@@ -4,6 +4,9 @@
 class LineSegment : public ICurve {
 	Point3D p1;
 	Point3D p2;
+
+	BoundingBox bbox;
+	void compute_bounding_box();
 public:
 	// Конструктор по умолчанию
 	LineSegment();
