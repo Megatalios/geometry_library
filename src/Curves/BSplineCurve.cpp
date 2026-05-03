@@ -4,9 +4,11 @@
 // По умолчанию
 BSplineCurve::BSplineCurve() {}
 // С параметрами
-BSplineCurve::BSplineCurve(std::vector<Point3D> initial_points, int degree_, std::vector<double> initial_knots) : control_points(initial_points), degree(degree_), knots(initial_knots) {}
+BSplineCurve::BSplineCurve(std::vector<Point3D> initial_points, int degree_, std::vector<double> initial_knots) : control_points(initial_points), degree(degree_), knots(initial_knots) {
+	compute_bounding_box();
+}
 // Копирования
-BSplineCurve::BSplineCurve(const BSplineCurve& other_spline) : control_points(other_spline.control_points), degree(other_spline.degree), knots(other_spline.knots) {}
+BSplineCurve::BSplineCurve(const BSplineCurve& other_spline) : control_points(other_spline.control_points), degree(other_spline.degree), knots(other_spline.knots), bbox(other_spline.bbox) {}
 
 // Метод для получения точки кривой при заданном t
 Point3D BSplineCurve::get_point(double t) const {
@@ -41,6 +43,7 @@ Vector3D BSplineCurve::get_derivative(double t) const {
 	return Vector3D(vx, vy, vz);
 }
 
+// Метод для получения второй производной кривой при заданном t
 Vector3D BSplineCurve::get_second_derivative(double t) const {
 	// Защита на случай, если степень меньше 2
 	if (degree < 2) {
@@ -65,6 +68,7 @@ Vector3D BSplineCurve::get_second_derivative(double t) const {
 
 }
 
+// Рекурсивный метод для вычисления базисных функций B-сплайна по формуле Кокса-Де Бура
 double BSplineCurve::CoxDeBoor(int i, int p, double u) const {
 	// Базовый случай (степень равна 0)
 	// Функция равна 1, если параметр u находится внутри текущего интервала узла
@@ -123,7 +127,7 @@ std::vector <double> generate_clamped_points(int num_points, int degree) {
 	return knots;
 }
 
-
+// Внутренний метод для вычисления контрольных точек для кривой скоростей и ускорений
 std::vector<Point3D> BSplineCurve::compute_derivative_points(const std::vector<Point3D>& points, int cur_degree) const {
 	std::vector<Point3D> q_points;
 	// Количество точек
@@ -160,11 +164,12 @@ std::vector<Point3D> BSplineCurve::compute_derivative_points(const std::vector<P
 	return q_points;
 }
 
-
+// Метод для получения параллелепипеда кривой
 BoundingBox BSplineCurve::get_bounding_box() const {
 	return bbox;
 }
 
+// Вспомогательный метод для вычисления описанной коробки
 void BSplineCurve::compute_bounding_box() {
 	bbox = BoundingBox();
 	for (const auto& point : control_points) {

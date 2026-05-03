@@ -1,8 +1,16 @@
 #include "geometry/Surfaces/BezierSurface.h"
 
+// Конструкторы
+// По умолчанию
 BezierSurface::BezierSurface() {}
-BezierSurface::BezierSurface(const std::vector<std::vector<Point3D>>& net) :control_net(net) {}
-BezierSurface::BezierSurface(const BezierSurface& otherSurface) : control_net(otherSurface.control_net) {}
+
+// С параметрами
+BezierSurface::BezierSurface(const std::vector<std::vector<Point3D>>& net) :control_net(net) {
+	compute_bounding_box();
+}
+
+// Копирования
+BezierSurface::BezierSurface(const BezierSurface& otherSurface) : control_net(otherSurface.control_net), bbox(otherSurface.bbox) {}
 
 // Получить точку на поверхности по параметрам u, v
 // Создаем множество кривых (по-умному - тензорное произведение)
@@ -81,8 +89,17 @@ Vector3D BezierSurface::get_normal(double u, double v) const {
 	return result;
 }
 
-
 // Метод для получения параллелепипеда поверхности
 BoundingBox BezierSurface::get_bounding_box() const {
 	return bbox;
+}
+
+// Вспомогательный метод для вычисления габаритов
+void BezierSurface::compute_bounding_box() {
+	bbox = BoundingBox();
+	for (const auto& row : control_net) {
+		for (const auto& point : row) {
+			bbox.add_point(point);
+		}
+	}
 }

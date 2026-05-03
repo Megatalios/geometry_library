@@ -101,6 +101,7 @@ BoundingBox BSplineSurface::get_bounding_box() const {
     return bbox;
 }
 
+// Вспомогательный метод для вычисления габаритов
 void BSplineSurface::compute_bounding_box() {
     bbox = BoundingBox();
     for (const auto& row : control_net) {
