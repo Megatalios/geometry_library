@@ -6,7 +6,7 @@ class BoundingBox {
 private:
 	Point3D minPoint;
 	Point3D maxPoint;
-	bool is_empty; // Флаг, чтобы понимать, пустая ли коробка при старте
+	bool is_empty = true; // Флаг, чтобы понимать, пустая ли коробка
 
 public:
 	// Конструктор по умолчанию 
