@@ -1,11 +1,19 @@
 #pragma once
 #include "geometry/Surfaces/ISurface.h"
-#include "geometry/Curves/BezierCurve.h"
+#include "geometry/Curves/BSplineCurve.h"
 #include <vector>
 
-class BezierSurface : public ISurface {
-	// Матрица точек (сетка)
+class BSplineSurface : public ISurface {
+	// Двумерная матрица контрольных точек(сетка)
 	std::vector<std::vector<Point3D>> control_net;
+	// Степень относительно параметрп u
+	int degree_u;
+	// Степень относительно параметра v
+	int degree_v;
+
+	// Узлоые точки для u и v
+	std::vector<double> knots_u;
+	std::vector<double> knots_v;
 	// Для параллелепипеда поверхности
 	BoundingBox bbox;
 
@@ -13,9 +21,15 @@ class BezierSurface : public ISurface {
 	void compute_bounding_box();
 public:
 	// Конструкторы
-	BezierSurface();
-	BezierSurface(const std::vector<std::vector<Point3D>>& net);
-	BezierSurface(const BezierSurface& otherSurface);
+	BSplineSurface();
+	BSplineSurface(
+		const std::vector<std::vector<Point3D>>& net,
+		int deg_u,
+		int deg_v,
+		const std::vector<double>& k_u,
+		const std::vector<double>& k_v
+	);
+	BSplineSurface(const BSplineSurface& otherSurface);
 	// Получить точку на поверхности по параметрам u, v
 	Point3D get_point(double u, double v) const override;
 
@@ -26,5 +40,5 @@ public:
 	BoundingBox get_bounding_box() const override;
 
 	// Виртуальный деструктор - нужен для корректного удаления объекта, который данный интерфейс поддерживает
-	~BezierSurface() = default;
+	~BSplineSurface() = default;
 };

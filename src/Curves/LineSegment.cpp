@@ -4,10 +4,13 @@
 LineSegment::LineSegment() : p1(), p2() {}
 
 // Конструктор с параметрами
-LineSegment::LineSegment(const Point3D& p1_, const Point3D& p2_) : p1(p1_), p2(p2_) {}
+LineSegment::LineSegment(const Point3D& p1_, const Point3D& p2_) : p1(p1_), p2(p2_) {
+	// Вычисляем размеры коробки, где отрезок прямой располагается
+	compute_bounding_box();
+}
 
 // Конструктор копирования
-LineSegment::LineSegment(const LineSegment& other_line) : p1(other_line.p1), p2(other_line.p2) {}
+LineSegment::LineSegment(const LineSegment& other_line) : p1(other_line.p1), p2(other_line.p2), bbox(other_line.bbox) {}
 
 // Перекрытый из интерфейса метод для получения значения точки при параметре t
 Point3D LineSegment::get_point(double t) const {
@@ -50,4 +53,14 @@ double LineSegment::point_projective(Point3D point) const {
 	if (t > 1.0) return 1.0;
 	return t;
 
+}
+
+// Метод для получения параллелепипеда отрезка прямой
+BoundingBox LineSegment::get_bounding_box() const {
+	return bbox;
+}
+
+// Вспомогательный метод для вычисления описанной коробки
+void LineSegment::compute_bounding_box() {
+	bbox = BoundingBox(p1, p2);
 }

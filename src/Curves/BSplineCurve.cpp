@@ -1,15 +1,17 @@
-#include "geometry/Curves/BSpline.h"
+#include "geometry/Curves/BSplineCurve.h"
 
 // Конструкторы
 // По умолчанию
-BSpline::BSpline() {}
+BSplineCurve::BSplineCurve() {}
 // С параметрами
-BSpline::BSpline(std::vector<Point3D> initial_points, int degree_, std::vector<double> initial_knots) : control_points(initial_points), degree(degree_), knots(initial_knots) {}
+BSplineCurve::BSplineCurve(std::vector<Point3D> initial_points, int degree_, std::vector<double> initial_knots) : control_points(initial_points), degree(degree_), knots(initial_knots) {
+	compute_bounding_box();
+}
 // Копирования
-BSpline::BSpline(const BSpline& other_spline) : control_points(other_spline.control_points), degree(other_spline.degree), knots(other_spline.knots) {}
+BSplineCurve::BSplineCurve(const BSplineCurve& other_spline) : control_points(other_spline.control_points), degree(other_spline.degree), knots(other_spline.knots), bbox(other_spline.bbox) {}
 
 // Метод для получения точки кривой при заданном t
-Point3D BSpline::get_point(double t) const {
+Point3D BSplineCurve::get_point(double t) const {
 	Point3D result(0, 0, 0);
 	int control_points_size = control_points.size();
 	for (int i = 0; i < control_points_size; ++i) {
@@ -23,7 +25,7 @@ Point3D BSpline::get_point(double t) const {
 }
 
 // Метод для получения производной кривой при заданном t
-Vector3D BSpline::get_derivative(double t) const {
+Vector3D BSplineCurve::get_derivative(double t) const {
 	// Получаем контрольные точки для кривой скоростей
 	std::vector<Point3D> q_points = compute_derivative_points(control_points, degree);
 	double q_points_size = q_points.size();
@@ -41,7 +43,8 @@ Vector3D BSpline::get_derivative(double t) const {
 	return Vector3D(vx, vy, vz);
 }
 
-Vector3D BSpline::get_second_derivative(double t) const {
+// Метод для получения второй производной кривой при заданном t
+Vector3D BSplineCurve::get_second_derivative(double t) const {
 	// Защита на случай, если степень меньше 2
 	if (degree < 2) {
 		return Vector3D(0, 0, 0);
@@ -65,7 +68,8 @@ Vector3D BSpline::get_second_derivative(double t) const {
 
 }
 
-double BSpline::CoxDeBoor(int i, int p, double u) const {
+// Рекурсивный метод для вычисления базисных функций B-сплайна по формуле Кокса-Де Бура
+double BSplineCurve::CoxDeBoor(int i, int p, double u) const {
 	// Базовый случай (степень равна 0)
 	// Функция равна 1, если параметр u находится внутри текущего интервала узла
 	if (p == 0) {
@@ -123,8 +127,8 @@ std::vector <double> generate_clamped_points(int num_points, int degree) {
 	return knots;
 }
 
-
-std::vector<Point3D> BSpline::compute_derivative_points(const std::vector<Point3D>& points, int cur_degree) const {
+// Внутренний метод для вычисления контрольных точек для кривой скоростей и ускорений
+std::vector<Point3D> BSplineCurve::compute_derivative_points(const std::vector<Point3D>& points, int cur_degree) const {
 	std::vector<Point3D> q_points;
 	// Количество точек
 	int points_size = points.size();
@@ -158,4 +162,17 @@ std::vector<Point3D> BSpline::compute_derivative_points(const std::vector<Point3
 		q_points[i] = q;
 	}
 	return q_points;
+}
+
+// Метод для получения параллелепипеда кривой
+BoundingBox BSplineCurve::get_bounding_box() const {
+	return bbox;
+}
+
+// Вспомогательный метод для вычисления описанной коробки
+void BSplineCurve::compute_bounding_box() {
+	bbox = BoundingBox();
+	for (const auto& point : control_points) {
+		bbox.add_point(point);
+	}
 }
