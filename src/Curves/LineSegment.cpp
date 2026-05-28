@@ -62,5 +62,7 @@ BoundingBox LineSegment::get_bounding_box() const {
 
 // Вспомогательный метод для вычисления описанной коробки
 void LineSegment::compute_bounding_box() {
-	bbox = BoundingBox(p1, p2);
+	bbox = BoundingBox(); // Создаем пустую коробку
+	bbox.add_point(p1);   // Она сама разберется, кто из них min, а кто max
+	bbox.add_point(p2);
 }

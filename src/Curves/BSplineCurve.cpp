@@ -3,12 +3,41 @@
 // Конструкторы
 // По умолчанию
 BSplineCurve::BSplineCurve() {}
-// С параметрами
+// С параметрами (если хотим сами задавать узлы)
 BSplineCurve::BSplineCurve(std::vector<Point3D> initial_points, int degree_, std::vector<double> initial_knots) : control_points(initial_points), degree(degree_), knots(initial_knots) {
 	compute_bounding_box();
 }
 // Копирования
 BSplineCurve::BSplineCurve(const BSplineCurve& other_spline) : control_points(other_spline.control_points), degree(other_spline.degree), knots(other_spline.knots), bbox(other_spline.bbox) {}
+// Новый  конструктор
+BSplineCurve::BSplineCurve(std::vector<Point3D> initial_points, int degree_)
+	: control_points(initial_points), degree(degree_) {
+	// Ядро само рассчитывает узлы
+	knots = generate_clamped_knots(initial_points.size(), degree_);
+	compute_bounding_box();
+}
+
+// Статический метод генерации узлов
+std::vector<double> BSplineCurve::generate_clamped_knots(int num_points, int degree) {
+	int num_knots = num_points + degree + 1;
+	std::vector<double> knots(num_knots);
+	int num_segments = num_points - degree;
+
+	if (num_segments <= 0) return knots;
+
+	for (int i = 0; i < num_knots; ++i) {
+		if (i <= degree) {
+			knots[i] = 0.0;
+		}
+		else if (i >= num_points) {
+			knots[i] = 1.0;
+		}
+		else {
+			knots[i] = 1.0 * (i - degree) / num_segments;
+		}
+	}
+	return knots;
+}
 
 // Метод для получения точки кривой при заданном t
 Point3D BSplineCurve::get_point(double t) const {
