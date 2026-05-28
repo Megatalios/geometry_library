@@ -46,8 +46,3 @@ Point3D BoundingBox::get_min_point() const {
 Point3D BoundingBox::get_max_point() const {
 	return maxPoint;
 }
-
-// Проверка пересечения с другой коробкой
-bool BoundingBox::is_intersect(const BoundingBox& other) const {
-
-}

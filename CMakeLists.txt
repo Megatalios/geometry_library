@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.15)
 project(geometrical_library_project)
 
 add_library(geometry 
-	# Базовые примитивы - вектор и точка
+	# Базовые примитивы
 	src/BasePrimitives/Point3D.cpp 
 	src/BasePrimitives/Vector3D.cpp
+	src/BasePrimitives/Matrix2x2.cpp
  
 	# Кривые - отрезок прямой, кривая Безье и B-сплайн
 	src/Curves/LineSegment.cpp 
