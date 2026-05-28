@@ -15,7 +15,9 @@ class BSplineCurve : public ICurve {
 	BoundingBox bbox;
 	// Вспомогательный метод для вычисления описанной коробки
 	void compute_bounding_box();
+	static std::vector<double> generate_clamped_knots(int num_points, int degree);
 public:
+	BSplineCurve(std::vector<Point3D> initial_points, int degree);
 	// Конструкторы
 	// По умолчанию
 	BSplineCurve();
