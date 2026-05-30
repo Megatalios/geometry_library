@@ -54,4 +54,9 @@ public:
 
 	// Поворот вектора с помощью формулы Родрига
 	Vector3D rotate(Vector3D ort, double angle) const;
+
+	// Геттеры
+	double getX() const;
+	double getY() const;
+	double getZ() const;
 };

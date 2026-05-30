@@ -103,3 +103,82 @@ void BezierSurface::compute_bounding_box() {
 		}
 	}
 }
+
+
+// Первые производные
+Vector3D BezierSurface::get_derivative_v(double u, double v) const {
+	std::vector<Point3D> temp_u_points;
+	int rows = control_net.size();
+	for (int i = 0; i < rows; ++i) {
+		BezierCurve temp_curve(control_net[i]);
+		temp_u_points.push_back(temp_curve.get_point(u));
+	}
+	BezierCurve curve_v(temp_u_points);
+	return curve_v.get_derivative(v);
+}
+
+Vector3D BezierSurface::get_derivative_u(double u, double v) const {
+	std::vector<Point3D> temp_v_points;
+	int rows = control_net.size();
+	int cols = control_net[0].size();
+	for (int i = 0; i < cols; ++i) {
+		std::vector<Point3D> col_points;
+		for (int j = 0; j < rows; ++j) {
+			col_points.push_back(control_net[j][i]);
+		}
+		BezierCurve temp_curve(col_points);
+		temp_v_points.push_back(temp_curve.get_point(v));
+	}
+	BezierCurve curve_u(temp_v_points);
+	return curve_u.get_derivative(u);
+}
+
+// Вторые чистые производные (пишутся практически так же) 
+
+Vector3D BezierSurface::get_second_derivative_vv(double u, double v) const {
+	std::vector<Point3D> temp_u_points;
+	int rows = control_net.size();
+	for (int i = 0; i < rows; ++i) {
+		BezierCurve temp_curve(control_net[i]);
+		temp_u_points.push_back(temp_curve.get_point(u));
+	}
+	BezierCurve curve_v(temp_u_points);
+	// Запрашиваем вторую производную
+	return curve_v.get_second_derivative(v);
+}
+
+Vector3D BezierSurface::get_second_derivative_uu(double u, double v) const {
+	std::vector<Point3D> temp_v_points;
+	int rows = control_net.size();
+	int cols = control_net[0].size();
+	for (int i = 0; i < cols; ++i) {
+		std::vector<Point3D> col_points;
+		for (int j = 0; j < rows; ++j) {
+			col_points.push_back(control_net[j][i]);
+		}
+		BezierCurve temp_curve(col_points);
+		temp_v_points.push_back(temp_curve.get_point(v));
+	}
+	BezierCurve curve_u(temp_v_points);
+	// Запрашиваем вторую производную
+	return curve_u.get_second_derivative(u);
+}
+
+// Смешанная производная dS/du_dv 
+
+Vector3D BezierSurface::get_second_derivative_uv(double u, double v) const {
+	std::vector<Point3D> temp_u_derivs;
+	int rows = control_net.size();
+
+	// Получаем векторы скорости (производные по U) от каждой строки
+	for (int i = 0; i < rows; ++i) {
+		BezierCurve temp_curve(control_net[i]);
+		Vector3D du = temp_curve.get_derivative(u);
+		// превращаем вектор в точку, чтобы передать в кривую
+		temp_u_derivs.push_back(Point3D(du.getX(), du.getY(), du.getZ()));
+	}
+
+	// Строим кривую в "пространстве скоростей" и берем производную по V
+	BezierCurve curve_v(temp_u_derivs);
+	return curve_v.get_derivative(v);
+}

@@ -37,15 +37,14 @@ Point3D BSplineSurface::get_point(double u, double v) const {
     int rows = control_net.size();
     std::vector<Point3D> temp_u_points;
 
-    // 1. Плетем нити вдоль U (идем по строкам)
+    // "Плетем нити" вдоль U (идем по строкам)
     for (int i = 0; i < rows; ++i) {
         // Создаем B-сплайн из i-той строки, используем степень и узлы для U
         BSplineCurve temp_curve(control_net[i], degree_u, knots_u);
         temp_u_points.push_back(temp_curve.get_point(u));
     }
 
-    // 2. Временные точки образуют поперечную нить вдоль V
-    // Используем степень и узлы для V
+    // Временные точки образуют поперечную "нить" вдоль V
     BSplineCurve final_curve(temp_u_points, degree_v, knots_v);
 
     return final_curve.get_point(v);
@@ -60,7 +59,7 @@ Vector3D BSplineSurface::get_normal(double u, double v) const {
     int rows = control_net.size();
     int cols = control_net[0].size();
 
-    // === 1. Вектор скорости вдоль V (S_v) ===
+    // Вектор скорости вдоль V (S_v)
     std::vector<Point3D> temp_u_points;
     for (int i = 0; i < rows; ++i) {
         BSplineCurve temp_curve(control_net[i], degree_u, knots_u);
@@ -70,7 +69,7 @@ Vector3D BSplineSurface::get_normal(double u, double v) const {
     Vector3D Sv = curve_v.get_derivative(v);
 
 
-    // === 2. Вектор скорости вдоль U (S_u) ===
+    // Вектор скорости вдоль U (S_u) 
     std::vector<Point3D> temp_v_points;
     for (int i = 0; i < cols; ++i) {
         std::vector<Point3D> col_points;
@@ -85,7 +84,7 @@ Vector3D BSplineSurface::get_normal(double u, double v) const {
     BSplineCurve curve_u(temp_v_points, degree_u, knots_u);
     Vector3D Su = curve_u.get_derivative(u);
 
-    // === 3. Векторное произведение ===
+    // Векторное произведение
     Vector3D normal = Su.cross(Sv);
 
     if (normal.length() < 1e-9) {
@@ -109,4 +108,84 @@ void BSplineSurface::compute_bounding_box() {
             bbox.add_point(point);
         }
     }
+}
+
+
+// Первые производные 
+
+Vector3D BSplineSurface::get_derivative_v(double u, double v) const {
+    std::vector<Point3D> temp_u_points;
+    int rows = control_net.size();
+    for (int i = 0; i < rows; ++i) {
+        BSplineCurve temp_curve(control_net[i], degree_u, knots_u);
+        temp_u_points.push_back(temp_curve.get_point(u));
+    }
+    BSplineCurve curve_v(temp_u_points, degree_v, knots_v);
+    return curve_v.get_derivative(v);
+}
+
+Vector3D BSplineSurface::get_derivative_u(double u, double v) const {
+    std::vector<Point3D> temp_v_points;
+    int rows = control_net.size();
+    int cols = control_net[0].size();
+    for (int i = 0; i < cols; ++i) {
+        std::vector<Point3D> col_points;
+        for (int j = 0; j < rows; ++j) {
+            col_points.push_back(control_net[j][i]);
+        }
+        BSplineCurve temp_curve(col_points, degree_v, knots_v);
+        temp_v_points.push_back(temp_curve.get_point(v));
+    }
+    BSplineCurve curve_u(temp_v_points, degree_u, knots_u);
+    return curve_u.get_derivative(u);
+}
+
+// Вторые чистые производные (пишутся практически так же) 
+
+Vector3D BSplineSurface::get_second_derivative_vv(double u, double v) const {
+    std::vector<Point3D> temp_u_points;
+    int rows = control_net.size();
+    for (int i = 0; i < rows; ++i) {
+        BSplineCurve temp_curve(control_net[i], degree_u, knots_u);
+        temp_u_points.push_back(temp_curve.get_point(u));
+    }
+    BSplineCurve curve_v(temp_u_points, degree_v, knots_v);
+    // Запрашиваем вторую производную
+    return curve_v.get_second_derivative(v);
+}
+
+Vector3D BSplineSurface::get_second_derivative_uu(double u, double v) const {
+    std::vector<Point3D> temp_v_points;
+    int rows = control_net.size();
+    int cols = control_net[0].size();
+    for (int i = 0; i < cols; ++i) {
+        std::vector<Point3D> col_points;
+        for (int j = 0; j < rows; ++j) {
+            col_points.push_back(control_net[j][i]);
+        }
+        BSplineCurve temp_curve(col_points, degree_v, knots_v);
+        temp_v_points.push_back(temp_curve.get_point(v));
+    }
+    BSplineCurve curve_u(temp_v_points, degree_u, knots_u);
+    // Запрашиваем вторую производную
+    return curve_u.get_second_derivative(u);
+}
+
+// Смешанная производная dS/du_dv
+
+Vector3D BSplineSurface::get_second_derivative_uv(double u, double v) const {
+    std::vector<Point3D> temp_u_derivs;
+    int rows = control_net.size();
+
+    // Получаем векторы скорости (производные по U) от каждой строки
+    for (int i = 0; i < rows; ++i) {
+        BSplineCurve temp_curve(control_net[i], degree_u, knots_u);
+        Vector3D du = temp_curve.get_derivative(u);
+        // превращаем вектор в точку, чтобы передать в кривую
+        temp_u_derivs.push_back(Point3D(du.getX(), du.getY(), du.getZ()));
+    }
+
+    // Строим кривую в "пространстве скоростей" и берем производную по V
+    BSplineCurve curve_v(temp_u_derivs, degree_v, knots_v);
+    return curve_v.get_derivative(v);
 }
