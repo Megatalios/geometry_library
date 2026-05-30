@@ -17,12 +17,13 @@ add_library(geometry
 	# Поверхности Безье и сплайновая
 	src/Surfaces/BezierSurface.cpp
 	src/Surfaces/BSplineSurface.cpp
+	src/Surfaces/ISurface.cpp
 	
 	src/BoundingBox/BoundingBox.cpp
 )
 
 target_include_directories(geometry PUBLIC include)
 
-add_executable(app app/main.cpp)
+# add_executable(app app/main.cpp)
 
-target_link_libraries(app geometry)
+# target_link_libraries(app geometry)

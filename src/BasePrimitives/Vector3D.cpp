@@ -81,3 +81,8 @@ Vector3D Vector3D::operator-() const {
 std::ostream& operator << (std::ostream& os, const Vector3D& vec) {
 	return os << vec.x << " " << vec.y << " " << vec.z;
 }
+
+// Геттеры
+double Vector3D::getX() const { return x;}
+double Vector3D::getY() const { return y;}
+double Vector3D::getZ() const { return z;}
