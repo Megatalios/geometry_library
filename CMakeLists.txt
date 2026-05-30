@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0135 NEW) # Нужно, чтобы лишних предупреждений не возникало при тестах
 
 project(geometrical_library_project)
 
@@ -24,6 +25,28 @@ add_library(geometry
 
 target_include_directories(geometry PUBLIC include)
 
-# add_executable(app app/main.cpp)
+# Подключение тестов от Гугла 
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+# Делаем так, чтобы GTest собирался без лишних сообщений
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-# target_link_libraries(app geometry)
+# Мы включаем функцию CTest
+enable_testing()
+
+# Создаем исполняемый файл с уникальным именем (например, geometry_tests)
+add_executable(geometry_tests tests/test_main.cpp)
+
+# Линкуем тесты
+target_link_libraries(geometry_tests 
+    geometry 
+    gtest 
+    gtest_main 
+)
+
+# Регистрируем тесты
+add_test(NAME AllTests COMMAND geometry_tests)

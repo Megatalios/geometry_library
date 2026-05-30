@@ -38,11 +38,6 @@ public:
 	// Смешанная частная производная
 	virtual Vector3D get_second_derivative_uv(double u, double v) const override;
 
-	// Многомерный метод Ньютона для проецирования точки
-	// Записывает найденные параметры в out_u и out_v. Возвращает true, если сошлось.
-	virtual bool point_projective(const Point3D& point, double& out_u, double& out_v) const override;
-
-
 
 	// Виртуальный деструктор - нужен для корректного удаления объекта, который данный интерфейс поддерживает
 	~BezierSurface() = default;
