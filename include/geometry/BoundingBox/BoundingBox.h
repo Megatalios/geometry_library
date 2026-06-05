@@ -27,4 +27,6 @@ public:
 
 	// Проверка пересечения с другой коробкой
 	bool is_intersect(const BoundingBox& other) const;
+
+	bool contains(const BoundingBox& other) const;
 };
