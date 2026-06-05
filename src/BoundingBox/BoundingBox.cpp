@@ -46,3 +46,11 @@ Point3D BoundingBox::get_min_point() const {
 Point3D BoundingBox::get_max_point() const {
 	return maxPoint;
 }
+
+bool BoundingBox::contains(const BoundingBox& other) const {
+    if (is_empty || other.is_empty) return false;
+
+    return (minPoint.getX() <= other.minPoint.getX() && maxPoint.getX() >= other.maxPoint.getX() &&
+        minPoint.getY() <= other.minPoint.getY() && maxPoint.getY() >= other.maxPoint.getY() &&
+        minPoint.getZ() <= other.minPoint.getZ() && maxPoint.getZ() >= other.maxPoint.getZ());
+}

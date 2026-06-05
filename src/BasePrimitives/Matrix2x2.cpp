@@ -26,3 +26,9 @@ bool Matrix2x2::solveCramer(double b0, double b1, double& out_x, double& out_y) 
 	out_y = (m[0][0] * b1 - m[1][0] * b0) / determinant;
 	return true;
 }
+
+std::ostream& operator << (std::ostream& os, const Matrix2x2& matrix)
+{
+	return os << matrix.m[0][0] << " " << matrix.m[0][1] << "\n"
+		<< matrix.m[1][0] << " " << matrix.m[1][1];
+}

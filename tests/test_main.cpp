@@ -115,6 +115,21 @@ TEST(CurveTest, BezierEndpoints) {
     EXPECT_DOUBLE_EQ(end.getX(), 5.0);
 }
 
+TEST(CurveTest, BezierCurveSingularity) {
+    std::vector<Point3D> control_points = {
+        Point3D(1.0, 1.0, 1.0),
+        Point3D(1.0, 1.0, 1.0),
+        Point3D(1.0, 1.0, 1.0),
+        Point3D(1.0, 1.0, 1.0) 
+    };
+
+	BezierCurve curve(control_points);
+	Point3D point_on_curve = curve.get_point(0.5);
+	EXPECT_DOUBLE_EQ(point_on_curve.getX(), 1.0);
+	EXPECT_DOUBLE_EQ(point_on_curve.getY(), 1.0);
+	EXPECT_DOUBLE_EQ(point_on_curve.getZ(), 1.0);
+}
+
 // ==========================================
 // 4. ТЕСТЫ ПОВЕРХНОСТЕЙ И НОРМАЛЕЙ
 // ==========================================
